@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "savings",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 8420
+    },
+    {
+      "name": "savings-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--port", "8421"],
+      "port": 8421
+    }
+  ]
+}

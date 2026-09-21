@@ -1,0 +1,8 @@
+node_modules
+dist
+
+# Personal savings data (stays on this machine only)
+data.json
+data.json.tmp
+
+*.stackdump
