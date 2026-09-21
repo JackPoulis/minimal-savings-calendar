@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Chart from './Chart.jsx'
 import DayDialog from './DayDialog.jsx'
+import EntryList from './EntryList.jsx'
 import { dayRange, eur, monthlyPayment, series, signed, todayIso, totalUntil } from './calc.js'
 
 // Keeps the typed text (so "0" or "0." stay visible) and reports it as a number; empty = 0.
@@ -24,11 +25,44 @@ function NumField({ value, onChange, ...props }) {
   )
 }
 
+const ListIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <rect x="1" y="2.5" width="2" height="2" />
+    <rect x="5" y="3" width="10" height="1" />
+    <rect x="1" y="7" width="2" height="2" />
+    <rect x="5" y="7.5" width="10" height="1" />
+    <rect x="1" y="11.5" width="2" height="2" />
+    <rect x="5" y="12" width="10" height="1" />
+  </svg>
+)
+
+const GraphIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">
+    <path d="M1.5 1.5v13h13" />
+    <path d="M3.5 11H6V7.5h3V9h2.5V4H14" />
+  </svg>
+)
+
 export default function App() {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [picked, setPicked] = useState(null)
   const [today, setToday] = useState(todayIso())
+  const [view, setView] = useState(() => {
+    try {
+      return localStorage.getItem('view') || 'graph'
+    } catch {
+      return 'graph'
+    }
+  })
+
+  function toggleView() {
+    const next = view === 'graph' ? 'list' : 'graph'
+    setView(next)
+    try {
+      localStorage.setItem('view', next)
+    } catch {}
+  }
 
   const version = useRef(null) // data.json version this page last saw
   const pending = useRef(0) // own saves still in flight
@@ -122,8 +156,24 @@ export default function App() {
             <span className="muted">Today</span>
             <span className={'num big ' + (have < 0 ? 'out' : 'in')}>{eur(have)}</span>
           </div>
+          <button
+            className="icon view-toggle"
+            onClick={toggleView}
+            aria-label={view === 'graph' ? 'Show list' : 'Show graph'}
+            title={view === 'graph' ? 'Show list' : 'Show graph'}
+          >
+            {view === 'graph' ? <ListIcon /> : <GraphIcon />}
+          </button>
         </div>
-        {points.length ? (
+        {view === 'list' ? (
+          <EntryList
+            entries={data.entries}
+            today={today}
+            onPick={setPicked}
+            onAdd={() => setPicked(today)}
+            onDelete={(id) => update({ entries: data.entries.filter((e) => e.id !== id) })}
+          />
+        ) : points.length ? (
           <Chart points={points} today={today} entries={data.entries} onPick={setPicked} />
         ) : (
           <p className="muted">Set an end date after the start date.</p>
