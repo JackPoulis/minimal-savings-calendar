@@ -137,48 +137,51 @@ export default function App() {
 
   return (
     <main className="app">
-      <header>
-        <h1>Savings</h1>
-        {error && <span className="err">{error}</span>}
-      </header>
+      {/* Header + main panel fill the first screen; goal and loan follow below. */}
+      <div className="screen">
+        <header>
+          <h1>Savings</h1>
+          {error && <span className="err">{error}</span>}
+        </header>
 
-      <section className="panel">
-        <div className="row wrap">
-          <label>
-            Start
-            <input type="date" value={data.startDate} onChange={(e) => e.target.value && update({ startDate: e.target.value })} />
-          </label>
-          <label>
-            End
-            <input type="date" value={data.endDate} onChange={(e) => e.target.value && update({ endDate: e.target.value })} />
-          </label>
-          <div className="stat">
-            <span className="muted">Today</span>
-            <span className={'num big ' + (have < 0 ? 'out' : 'in')}>{eur(have)}</span>
+        <section className="panel main-panel">
+          <div className="row wrap">
+            <label>
+              Start
+              <input type="date" value={data.startDate} onChange={(e) => e.target.value && update({ startDate: e.target.value })} />
+            </label>
+            <label>
+              End
+              <input type="date" value={data.endDate} onChange={(e) => e.target.value && update({ endDate: e.target.value })} />
+            </label>
+            <div className="stat">
+              <span className="muted">Today</span>
+              <span className={'num big ' + (have < 0 ? 'out' : 'in')}>{eur(have)}</span>
+            </div>
+            <button
+              className="icon view-toggle"
+              onClick={toggleView}
+              aria-label={view === 'graph' ? 'Show list' : 'Show graph'}
+              title={view === 'graph' ? 'Show list' : 'Show graph'}
+            >
+              {view === 'graph' ? <ListIcon /> : <GraphIcon />}
+            </button>
           </div>
-          <button
-            className="icon view-toggle"
-            onClick={toggleView}
-            aria-label={view === 'graph' ? 'Show list' : 'Show graph'}
-            title={view === 'graph' ? 'Show list' : 'Show graph'}
-          >
-            {view === 'graph' ? <ListIcon /> : <GraphIcon />}
-          </button>
-        </div>
-        {view === 'list' ? (
-          <EntryList
-            entries={data.entries}
-            today={today}
-            onPick={setPicked}
-            onAdd={() => setPicked(today)}
-            onDelete={(id) => update({ entries: data.entries.filter((e) => e.id !== id) })}
-          />
-        ) : points.length ? (
-          <Chart points={points} today={today} entries={data.entries} onPick={setPicked} />
-        ) : (
-          <p className="muted">Set an end date after the start date.</p>
-        )}
-      </section>
+          {view === 'list' ? (
+            <EntryList
+              entries={data.entries}
+              today={today}
+              onPick={setPicked}
+              onAdd={() => setPicked(today)}
+              onDelete={(id) => update({ entries: data.entries.filter((e) => e.id !== id) })}
+            />
+          ) : points.length ? (
+            <Chart points={points} today={today} entries={data.entries} onPick={setPicked} />
+          ) : (
+            <p className="muted">Set an end date after the start date.</p>
+          )}
+        </section>
+      </div>
 
       <section className="panel">
         <div className="row wrap between">

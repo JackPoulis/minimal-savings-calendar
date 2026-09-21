@@ -3,8 +3,8 @@ import { eur, eurShort, parse } from './calc.js'
 
 const W = 28 // px per day
 const TOP = 12
-const PH = 220 // plot height
-const H = TOP + PH + 54 // extra space at the bottom keeps month labels clear of the scrollbar
+const BOTTOM = 54 // day + month labels, plus space that keeps them clear of the scrollbar
+const MIN_PH = 120 // smallest plot height
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 function niceStep(span) {
@@ -17,6 +17,15 @@ function niceStep(span) {
 export default function Chart({ points, today, entries, onPick }) {
   const scrollRef = useRef(null)
   const [hover, setHover] = useState(null)
+  // The chart fills whatever height its container gives it.
+  const [H, setH] = useState(TOP + 220 + BOTTOM)
+  const PH = Math.max(MIN_PH, H - TOP - BOTTOM)
+  useEffect(() => {
+    const el = scrollRef.current
+    const ro = new ResizeObserver(() => el.clientHeight && setH(el.clientHeight))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
   const [view, setView] = useState({ left: 0, width: 10000 })
   const onScroll = () => {
     const el = scrollRef.current
@@ -60,7 +69,7 @@ export default function Chart({ points, today, entries, onPick }) {
       else future += `L${x0},${yy}H${x0 + W}`
     })
     return { past, future }
-  }, [points, today, lo, hi])
+  }, [points, today, lo, hi, PH])
 
   const months = useMemo(() => {
     const groups = []

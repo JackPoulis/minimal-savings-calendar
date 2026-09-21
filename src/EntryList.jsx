@@ -24,7 +24,7 @@ export default function EntryList({ entries, today, onPick, onDelete, onAdd }) {
           <li key={e.id} className={e.date <= today ? 'past' : ''}>
             <button className="entry-main" onClick={() => onPick(e.date)} title="Edit this day">
               <span className="date num">
-                {parse(e.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                {parse(e.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
               </span>
               <span className="title">{e.title}</span>
               <span className={'num ' + e.type}>
