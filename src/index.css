@@ -55,7 +55,7 @@ input, select {
 }
 input:focus, select:focus { outline: 1px solid var(--accent); outline-offset: -1px; }
 input[type='number'] { width: 130px; }
-select { width: 80px; }
+input.years { width: 80px; }
 
 button {
   background: #3a3d41;

@@ -166,13 +166,13 @@ export default function App() {
           </label>
           <label>
             Years
-            <select value={data.loanYears} onChange={(e) => update({ loanYears: Number(e.target.value) })}>
-              {[1, 2, 3, 4, 5, 6, 7].map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
+            <NumField
+              className="years"
+              min="1"
+              step="1"
+              value={data.loanYears}
+              onChange={(v) => v >= 1 && update({ loanYears: Math.floor(v) })}
+            />
           </label>
         </div>
         <div className="row wrap">
