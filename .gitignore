@@ -1,8 +1,10 @@
-node_modules
-dist
-
-# Personal savings data (stays on this machine only)
-data.json
-data.json.tmp
-
 *.stackdump
+
+# Flutter app
+flutter_app/build/
+flutter_app/.dart_tool/
+flutter_app/android/local.properties
+flutter_app/android/.gradle/
+flutter_app/.flutter-plugins-dependencies
+# Private copy of the real savings data, bundled as the first-run seed
+flutter_app/assets/seed_data.json
